@@ -1,7 +1,7 @@
 # don't forget to leave a star <3 https://github.com/hoemotion/discord-mass-dm
 import os, sys, time, random, asyncio, json , logging, base64; from datetime import datetime; from typing import Dict, Tuple
 from lib.scrape import scrape
-
+from pathlib import Path
 try:
     import psutil; from aiohttp import ClientSession; from tasksio import TaskPool; from rich.table import Table; from rich.console import Console; from rich.highlighter import ReprHighlighter
 except ImportError:
@@ -55,19 +55,19 @@ class Discord(object):
         self.arrow = f" {self.red}->{self.rst} "
         with open("data/useragents.txt", encoding="utf-8") as f:
             self.useragents = [i.strip() for i in f]
-
+        path = Path(__file__).parent / "./data/tokens.json"
         try:
-            with open("data/tokens.json", "r") as file:
+            with path.open() as file:
                 tkns = json.load(file)
                 if len(tkns) == 0:
-                    logging.info(f"{self.err} Please insert your tokens {self.opbracket}tokens.json{self.closebrckt}")
+                    logging.info(f"{self.err} No tokens: Please insert your tokens {self.opbracket}tokens.json{self.closebrckt}")
                     sys.exit()
                 for tkn in tkns:
                     self.tokens.append(tkn)
-
         except Exception:
-            logging.info(f"{self.err} Please insert your tokens correctly in {self.opbracket}tokens.json{self.closebrckt}")
+            logging.info(f"{self.err} Exception: Please insert your tokens correctly in {self.opbracket}tokens.json{self.closebrckt}")
             sys.exit()
+
         try:
             with open("data/message.json", "r") as file:
                 data = json.load(file)
